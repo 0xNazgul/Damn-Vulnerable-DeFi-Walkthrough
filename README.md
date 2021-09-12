@@ -2,7 +2,7 @@
 
 This is a walkthrough for the Damn Vulnerable Defi challenges. 
 
-## How To Do Challenges
+## How To Do The Challenges
 
 1. Clone the [repository](https://github.com/OpenZeppelin/damn-vulnerable-defi/tree/v1.0.0)
 2. Install dependencies with npm install
