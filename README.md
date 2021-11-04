@@ -13,4 +13,6 @@ This is a walkthrough for the Damn Vulnerable Defi challenges.
 4. Run your exploit for a challenge with npm run challenge-name. If the challenge is executed successfully, you've passed!
 
 
-I was able to complete the challenges with the help of looking through [MrToph's walkthrough.](https://github.com/MrToph/damn-vulnerable-defi)
+I was able to complete the challenges with the help of looking through [MrToph's walkthrough.](https://github.com/MrToph/damn-vulnerable-defi) whenever I got stuck.
+
+Working on doing the [new challenges](https://www.damnvulnerabledefi.xyz/v2-release.html) just released!
