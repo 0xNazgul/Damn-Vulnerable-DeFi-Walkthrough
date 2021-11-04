@@ -1,6 +1,6 @@
 # Damn Vulnerable DeFi Walkthrough
 
-This is a walkthrough for the Damn Vulnerable Defi challenges. 
+This is a walkthrough for the Damn Vulnerable Defi challenges (sorry to say these don't work [anymore](https://www.damnvulnerabledefi.xyz/v2-release.html)).
 
 ## How To Do The Challenges
 
@@ -15,4 +15,4 @@ This is a walkthrough for the Damn Vulnerable Defi challenges.
 
 I was able to complete the challenges with the help of looking through [MrToph's walkthrough.](https://github.com/MrToph/damn-vulnerable-defi) whenever I got stuck.
 
-Working on doing the [new challenges](https://www.damnvulnerabledefi.xyz/v2-release.html) just released!
+Working on doing the [new challenges](https://www.damnvulnerabledefi.xyz/v2-release.html) just released! 
