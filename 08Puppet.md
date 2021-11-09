@@ -28,7 +28,6 @@ contract PuppetPool is ReentrancyGuard {
         uniswapOracle = uniswapOracleAddress;
     }
 
-    // Allows borrowing `borrowAmount` of tokens by first depositing two times their value in ETH
     function borrow(uint256 borrowAmount) public payable nonReentrant {
         uint256 amountToDeposit = msg.value;
 
@@ -43,8 +42,6 @@ contract PuppetPool is ReentrancyGuard {
         }        
 
         deposits[msg.sender] += amountToDeposit;
-
-        // Fails if the pool doesn't have enough tokens in liquidity
         require(token.transfer(msg.sender, borrowAmount), "Transfer failed");
     }
 
